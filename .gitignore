@@ -1,0 +1,9 @@
+.vscode
+build/*.sym
+build/*.srm
+build/*.bst
+build/*.smc
+build/*.sfc
+resources/asar
+resources/*.sfc
+resources/*.ips
