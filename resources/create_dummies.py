@@ -12,8 +12,9 @@ else:
 fo_z = open(os.path.dirname(os.path.realpath(__file__)) + "/" + zero_name, "wb")
 fo_f = open(os.path.dirname(os.path.realpath(__file__)) + "/" + ff_name, "wb")
 
-fo_z.write(bytes([0x00] * 1024 * 1024 * 3))
-fo_f.write(bytes([0xff] * 1024 * 1024 * 3))
+# Increase to 4 mb to account for custom sprites
+fo_z.write(bytes([0x00] * 1024 * 1024 * 4))
+fo_f.write(bytes([0xff] * 1024 * 1024 * 4))
 
 fo_z.close()
 fo_f.close()

@@ -3,6 +3,8 @@
 
 echo Building Super Metroid Randomizer
 
+for /r %%f in (build*.py) do python %%f
+
 cd resources
 python create_dummies.py 00.sfc ff.sfc
 asar --no-title-check --symbols=wla --symbols-path=..\build\sm.sym ..\src\main.asm 00.sfc

@@ -35,6 +35,9 @@ org $808000				; Disable copy protection screen
 ; Config flags
 incsrc config.asm
 
+; Super Metroid custom Samus sprite "engine" by Artheau
+incsrc "sprite/sprite.asm"
+
 ; These patches include their own origins and patch locations
 incsrc randopatches/introskip.asm
 incsrc randopatches/wake_zebes.asm
