@@ -1,10 +1,12 @@
 ; custom credits
 lorom
+math pri on
 
 ; Defines for the script and credits data
 !speed = $f770
 !set = $9a17
 !delay = $9a0d
+!checkflag = checkflag&$FFFF
 !draw = $0000
 !end = $f6fe, $99fe
 !blank = $1fc0
@@ -190,15 +192,15 @@ patch_load:
     cmp !last_saveslot      ; If we're loading the same save that's played last
     beq +                   ; don't restore stats from SRAM, only do this if
     jsl load_stats          ; a new save slot is loaded, or loading from hard reset
-    lda config_multiworld
-    beq ++
-    jsl mw_load_sram
-++   
     lda $7ffc00
     sta !timer1
     lda $7ffc02
     sta !timer2
 +
+    lda config_multiworld
+    beq +
+    jsl mw_load_sram
++   
     ply
     plx
     clc
@@ -272,7 +274,7 @@ copy:
     phx
     ldx #$0000
 -
-    lda.l credits, x
+    lda.l credits_rom, x
     cmp #$0000
     beq +
     sta $7f2000, x
@@ -350,6 +352,24 @@ game_end:
     lda #$000a
     jsl $90f084
     rtl
+
+checkflag:
+    rep #$30
+    phb : pea $df00 : plb : plb : phx
+    ldx $0000, y ; Load flag address to check
+    iny #2
+    lda.l config_flags&$FF0000, x ; load flag    
+    bne .show
+    lda $0000, y ; Load next instruction
+    tay
+    bra .end
+.show
+    iny #2
+.end
+    plx
+    plb
+    rts    
+
 
 org $dfd4f0
 ; Draw full time as hh:mm:ss:ff
@@ -937,168 +957,156 @@ script:
 
     ; Custom item randomizer credits text        
 
-    dw !draw, !row*128
+    dw !draw, credits_start
     dw !draw, !blank
     dw !draw, !blank
-    dw !draw, !row*129
+    dw !draw, credits_randomizer
     dw !draw, !blank
-    dw !draw, !row*130
-    dw !draw, !row*131
+    dw !draw, credits_randomizer+!row*1
+    dw !draw, credits_randomizer+!row*2
     dw !draw, !blank
-    dw !draw, !row*132
-    dw !draw, !row*133
-    dw !draw, !blank
-    dw !draw, !blank
-    dw !draw, !row*134
-    dw !draw, !blank
-    dw !draw, !row*135
-    dw !draw, !row*136
-    dw !draw, !blank
-    dw !draw, !row*137
-    dw !draw, !row*138
-    dw !draw, !blank
-    dw !draw, !row*139
-    dw !draw, !row*140
+    dw !draw, credits_randomizer+!row*3
+    dw !draw, credits_randomizer+!row*4
     dw !draw, !blank
     dw !draw, !blank
-    dw !draw, !row*141
+    dw !draw, credits_snes
     dw !draw, !blank
-    dw !draw, !row*142
-    dw !draw, !row*143
+    dw !draw, credits_snes+!row*1
+    dw !draw, credits_snes+!row*2
     dw !draw, !blank
-    dw !draw, !row*144
-    dw !draw, !row*145
+    dw !draw, credits_snes+!row*3
+    dw !draw, credits_snes+!row*4
     dw !draw, !blank
-    dw !draw, !row*146
-    dw !draw, !row*147
+    dw !draw, credits_snes+!row*5
+    dw !draw, credits_snes+!row*6
     dw !draw, !blank
-    dw !draw, !blank
-    dw !draw, !row*148
-    dw !draw, !blank
-    dw !draw, !row*149
-    dw !draw, !blank
-    dw !draw, !row*150
-    dw !draw, !row*151
-    dw !draw, !blank
-    dw !draw, !row*152
-    dw !draw, !row*153
+    dw !draw, credits_snes+!row*7
+    dw !draw, credits_snes+!row*8
     dw !draw, !blank
     dw !draw, !blank
-    dw !draw, !row*154
+    dw !draw, credits_patches
     dw !draw, !blank
-    dw !draw, !row*155
-    dw !draw, !row*156
+    dw !draw, credits_patches+!row*1
+    dw !draw, credits_patches+!row*2
     dw !draw, !blank
+    dw !draw, credits_patches+!row*3
+    dw !draw, credits_patches+!row*4
     dw !draw, !blank
-    dw !draw, !row*157
-    dw !draw, !blank
-    dw !draw, !row*158
-    dw !draw, !row*159
-    dw !draw, !blank
-    dw !draw, !row*160
-    dw !draw, !row*161
-    dw !draw, !blank
-    dw !draw, !row*162
-    dw !draw, !row*163
-    dw !draw, !blank
-    dw !draw, !row*164
-    dw !draw, !row*165
-    dw !draw, !blank
-    dw !draw, !row*166
-    dw !draw, !row*167
-    dw !draw, !blank
-    dw !draw, !row*168
-    dw !draw, !row*169
+    dw !draw, credits_patches+!row*5
+    dw !draw, credits_patches+!row*6
     dw !draw, !blank
     dw !draw, !blank
-    dw !draw, !row*170
+    dw !checkflag, config_sprite, .after_sprite
+    dw !draw, credits_custom_sprite_graphics
     dw !draw, !blank
-    dw !draw, !row*171
-    dw !draw, !row*172
-    dw !draw, !blank
-    dw !draw, !row*173
-    dw !draw, !row*174
+    dw !draw, credits_custom_sprite_graphics+!row*1
+    dw !draw, credits_custom_sprite_graphics+!row*2
     dw !draw, !blank
     dw !draw, !blank
-    dw !draw, !row*175
+.after_sprite
+    dw !draw, credits_original
     dw !draw, !blank
-    dw !draw, !row*176
-    dw !draw, !row*177
+    dw !draw, credits_original+!row*1
+    dw !draw, credits_original+!row*2
+    dw !draw, !blank
+    dw !draw, credits_special
+    dw !draw, !blank
+    dw !draw, credits_special+!row*1
+    dw !draw, credits_special+!row*2
+    dw !draw, !blank
+    dw !draw, credits_special+!row*3
+    dw !draw, credits_special+!row*4
+    dw !draw, !blank
+    dw !draw, credits_special+!row*5
+    dw !draw, credits_special+!row*6
+    dw !draw, !blank
+    dw !draw, credits_special+!row*7
+    dw !draw, credits_special+!row*8
+    dw !draw, !blank
+    dw !draw, credits_special+!row*9
+    dw !draw, credits_special+!row*10
+    dw !draw, !blank
+    dw !draw, credits_special+!row*11
+    dw !draw, credits_special+!row*12
     dw !draw, !blank
     dw !draw, !blank
-    dw !draw, !row*178
+    dw !draw, credits_metconst
     dw !draw, !blank
-    dw !draw, !row*179
-    dw !draw, !row*180
+    dw !draw, credits_metconst+!row*1
+    dw !draw, credits_metconst+!row*2
     dw !draw, !blank
     dw !draw, !blank
-    dw !draw, !row*221
+    dw !draw, credits_srl
     dw !draw, !blank
-    dw !draw, !row*181
-    dw !draw, !row*182
     dw !draw, !blank
+    dw !draw, credits_play
+    dw !draw, !blank
+    dw !draw, credits_play+!row*1
+    dw !draw, credits_play+!row*2
     dw !draw, !blank
     dw !draw, !blank
     
+
+    ; Gameplay statistics
     dw !draw, !blank
-    dw !draw, !row*183
+    dw !draw, credits_stats
     dw !draw, !blank
     dw !draw, !blank
-    dw !draw, !row*184
+    dw !draw, credits_stats+!row*1
     dw !draw, !blank
 
     ; Set scroll speed to 3 frames per pixel
     dw !speed, $0003
-    dw !draw, !row*185
-    dw !draw, !row*186
+    dw !draw, credits_stats+!row*2
+    dw !draw, credits_stats+!row*3
     dw !draw, !blank
-    dw !draw, !row*187
-    dw !draw, !row*188
+    dw !draw, credits_stats+!row*4
+    dw !draw, credits_stats+!row*5
     dw !draw, !blank
-    dw !draw, !row*189
-    dw !draw, !row*190
-    dw !draw, !blank
-    dw !draw, !blank
-    dw !draw, !row*191
-    dw !draw, !blank
-    dw !draw, !row*192
-    dw !draw, !row*193
-    dw !draw, !blank
-    dw !draw, !row*194
-    dw !draw, !row*195
-    dw !draw, !blank
-    dw !draw, !row*196
-    dw !draw, !row*197
-    dw !draw, !blank
-    dw !draw, !row*198
-    dw !draw, !row*199
-    dw !draw, !blank
-    dw !draw, !row*200
-    dw !draw, !row*201
-    dw !draw, !blank
-    dw !draw, !row*202
-    dw !draw, !row*203
+    dw !draw, credits_stats+!row*6
+    dw !draw, credits_stats+!row*7
     dw !draw, !blank
     dw !draw, !blank
-    dw !draw, !row*204
+    dw !draw, credits_stats+!row*8
     dw !draw, !blank
-    dw !draw, !row*205
-    dw !draw, !row*206
+    dw !draw, credits_stats+!row*9
+    dw !draw, credits_stats+!row*10
     dw !draw, !blank
-    dw !draw, !row*207
-    dw !draw, !row*208
+    dw !draw, credits_stats+!row*11
+    dw !draw, credits_stats+!row*12
     dw !draw, !blank
-    dw !draw, !row*209
-    dw !draw, !row*210
+    dw !draw, credits_stats+!row*13
+    dw !draw, credits_stats+!row*14
     dw !draw, !blank
-    dw !draw, !row*211
-    dw !draw, !row*212
+    dw !draw, credits_stats+!row*15
+    dw !draw, credits_stats+!row*16
     dw !draw, !blank
-    dw !draw, !row*213
-    dw !draw, !row*214
+    dw !draw, credits_stats+!row*17
+    dw !draw, credits_stats+!row*18
     dw !draw, !blank
-    dw !draw, !row*215
-    dw !draw, !row*216
+    dw !draw, credits_stats+!row*19
+    dw !draw, credits_stats+!row*20
+    dw !draw, !blank
+    dw !draw, !blank
+    dw !draw, credits_stats+!row*21
+    dw !draw, !blank
+    dw !draw, credits_stats+!row*22
+    dw !draw, credits_stats+!row*23
+    dw !draw, !blank
+    dw !draw, credits_stats+!row*24
+    dw !draw, credits_stats+!row*25
+    dw !draw, !blank
+    dw !draw, credits_stats+!row*26
+    dw !draw, credits_stats+!row*27
+    dw !draw, !blank
+    dw !draw, credits_stats+!row*28
+    dw !draw, credits_stats+!row*29
+    dw !draw, !blank
+    dw !draw, credits_stats+!row*30
+    dw !draw, credits_stats+!row*31
+    dw !draw, !blank
+    dw !draw, credits_stats+!row*32
+    dw !draw, credits_stats+!row*33
 
    
     ; Draw item locations
@@ -1161,12 +1169,18 @@ script:
     dw !draw, !blank
     dw !draw, !blank
     dw !draw, !blank
-    dw !draw, !row*217
-    dw !draw, !row*218
     dw !draw, !blank
     dw !draw, !blank
-    dw !draw, !row*219
-    dw !draw, !row*220        
+    dw !draw, !blank
+    dw !draw, !blank
+    dw !draw, !blank
+    dw !draw, !blank
+    dw !draw, credits_stats_final
+    dw !draw, credits_stats_final+!row*1
+    dw !draw, !blank
+    dw !draw, !blank
+    dw !draw, credits_stats_final+!row*2
+    dw !draw, credits_stats_final+!row*3
     dw !draw, !blank
     dw !draw, !blank
     dw !draw, !blank
@@ -1187,45 +1201,50 @@ script:
     dw !end
 
 stats:
-    ; STAT ID, ADDRESS,    TYPE (1 = Number, 2 = Time, 3 = Full time), UNUSED
-    dw 0,       !row*217,  3, 0    ; Full RTA Time
-    dw 2,       !row*185,  1, 0    ; Door transitions
-    dw 3,       !row*187,  3, 0    ; Time in doors
-    dw 5,       !row*189,  2, 0    ; Time adjusting doors
-    dw 7,       !row*192,  3, 0    ; Crateria
-    dw 9,       !row*194,  3, 0    ; Brinstar
-    dw 11,      !row*196,  3, 0    ; Norfair
-    dw 13,      !row*198,  3, 0    ; Wrecked Ship
-    dw 15,      !row*200,  3, 0    ; Maridia
-    dw 17,      !row*202,  3, 0    ; Tourian
-    dw 20,      !row*205,  1, 0    ; Charged Shots
-    dw 21,      !row*207,  1, 0    ; Special Beam Attacks
-    dw 22,      !row*209,  1, 0    ; Missiles
-    dw 23,      !row*211,  1, 0    ; Super Missiles
-    dw 24,      !row*213,  1, 0    ; Power Bombs
-    dw 26,      !row*215,  1, 0    ; Bombs
-    dw 0,              0,  0, 0    ; end of table
+    ; STAT ID,  ADDRESS,                        TYPE (1 = Number, 2 = Time, 3 = Full time), UNUSED
+    dw 0,       credits_stats_final,            3, 0    ; Full RTA Time
+    dw 2,       credits_stats_doors,            1, 0    ; Door transitions
+    dw 3,       credits_stats_doors+!row*2,     3, 0    ; Time in doors
+    dw 5,       credits_stats_doors+!row*4,     2, 0    ; Time adjusting doors
+    dw 7,       credits_stats_spent,            3, 0    ; Crateria
+    dw 9,       credits_stats_spent+!row*2,     3, 0    ; Brinstar
+    dw 11,      credits_stats_spent+!row*4,     3, 0    ; Norfair
+    dw 13,      credits_stats_spent+!row*6,     3, 0    ; Wrecked Ship
+    dw 15,      credits_stats_spent+!row*8,     3, 0    ; Maridia
+    dw 17,      credits_stats_spent+!row*10,    3, 0    ; Tourian
+    dw 20,      credits_stats_ammo,             1, 0    ; Charged Shots
+    dw 21,      credits_stats_ammo+!row*2,      1, 0    ; Special Beam Attacks
+    dw 22,      credits_stats_ammo+!row*4,      1, 0    ; Missiles
+    dw 23,      credits_stats_ammo+!row*6,      1, 0    ; Super Missiles
+    dw 24,      credits_stats_ammo+!row*8,      1, 0    ; Power Bombs
+    dw 26,      credits_stats_ammo+!row*10,     1, 0    ; Bombs
+    dw 0,       0,                              0, 0    ; end of table
 
 warnpc $dfffff
 
 ; Relocated credits tilemap to free space in bank CE
 org $ceb240
+credits_rom:
+base $7f2000
 credits:
     ; When using big text, it has to be repeated twice, first in UPPERCASE and then in lowercase since it's split into two parts
     ; Numbers are mapped in a special way as described below:
     ; 0123456789%& '´
     ; }!@#$%&/()>~.
-    
+
+.start    
     !pink
     dw "     ITEM RANDOMIZER STAFF      " ; 128
     !purple
+.randomizer
     dw "         RANDOMIZER CODE        " ; 129
     !big
     dw "             TOTAL              " ; 130
     dw "             total              " ; 131
-    dw "           DESSYREQT            " ; 132
-    dw "           dessyreqt            " ; 133
+    dw "           HALFAREBEL           " ; 132
+    dw "           halfarebel           " ; 133
     !purple
+.snes
     dw "           SNES CODE            " ; 134
     !big
     dw "             TOTAL              " ; 135
@@ -1234,110 +1253,111 @@ credits:
     dw "             foosda             " ; 138
     dw "           PERSONITIS           " ; 139
     dw "           personitis           " ; 140
+    dw "            ARTHEAU             " ; 141
+    dw "            artheau             " ; 142
     !purple
-    dw "          ROM PATCHES           " ; 141
+.patches
+    dw "          ROM PATCHES           " ; 143
     !big
-    dw "             TOTAL              " ; 142
-    dw "             total              " ; 143
-    dw "             FOOSDA             " ; 144
-    dw "             foosda             " ; 145
-    dw "             LEODOX             " ; 146
-    dw "             leodox             " ; 147
+    dw "             TOTAL              " ; 144
+    dw "             total              " ; 145
+    dw "             FOOSDA             " ; 146
+    dw "             foosda             " ; 147
+    dw "             LEODOX             " ; 148
+    dw "             leodox             " ; 149
+    !purple
+.original
+    dw "    ORIGINAL RANDOMIZER CODE    " ; 150
+    !big
+    dw "           DESSYREQT            " ; 151
+    dw "           dessyreqt            " ; 152
     !cyan
-    dw "       SPECIAL THANKS TO        " ; 148
-    !yellow
-    dw "   SUPER METROID DISASSEMBLY    " ; 149
+.special
+    dw "       SPECIAL THANKS TO        " ; 153
     !big
-    dw "             PJBOY              " ; 150
-    dw "             pjboy              " ; 151
-    dw "            KEJARDON            " ; 152
-    dw "            kejardon            " ; 153
+    dw "      PJBOY         KEJARDON    " ; 154
+    dw "      pjboy         kejardon    " ; 155
+    dw "   CROSSPRODUCT     FERAL5X     " ; 156
+    dw "   crossproduct     feral%x     " ; 157
+    dw "    STRAEVARAS   WILDANACONDA69 " ; 158
+    dw "    straevaras   wildanaconda&) " ; 159
+    dw "    BELTHASAR     KEKUMANSHOYU  " ; 160
+    dw "    belthasar     kekumanshoyu  " ; 161
+    dw "      TYPWO         LENOPHIS    " ; 162
+    dw "      typwo         lenophis    " ; 163
+    dw "      FEASEL        MITHICAL9   " ; 164
+    dw "      feasel        mithical)   " ; 165
     !yellow
-    dw "            TRACKER             " ; 154
+.metconst
+    dw "      METROID CONSTRUCTION      " ; 166
     !big
-    dw "          CROSSPRODUCT          " ; 155
-    dw "          crossproduct          " ; 156
+    dw "     METROIDCONSTRUCTION COM    " ; 167
+    dw "     metroidconstruction.com    " ; 168
     !yellow
-    dw "     TOURNAMENT ORGANIZERS      " ; 157
+.srl
+    dw "  SUPER METROID SRL COMMUNITY   " ; 169
+    !cyan
+.play
+    dw "     PLAY THIS RANDOMIZER AT    " ; 170
     !big
-    dw "            FERAL5X             " ; 158
-    dw "            feral%x             " ; 159
-    dw "           STRAEVARAS           " ; 160
-    dw "           straevaras           " ; 161
-    dw "         WILDANACONDA69         " ; 162
-    dw "         wildanaconda&)         " ; 163
-    dw "           BELTHASAR            " ; 164
-    dw "           belthasar            " ; 165
-    dw "          KEKUMANSHOYU          " ; 166
-    dw "          kekumanshoyu          " ; 167
-    dw "             TYPWO              " ; 168
-    dw "             typwo              " ; 169
-    !yellow
-    dw "       SPEEDGAMING STAFF        " ; 170
-    !big
-    dw "            FEASEL              " ; 171
-    dw "            feasel              " ; 172
-    dw "           MITHICAL9            " ; 173
-    dw "           mithical)            " ; 174
-    !yellow
-    dw "      METROID CONSTRUCTION      " ; 175
-    !big
-    dw "     METROIDCONSTRUCTION COM    " ; 176
-    dw "     metroidconstruction.com    " ; 177
-    !yellow
-    dw "  SUPER METROID SRL COMMUNITY   " ; 178
-    !big
-    dw "    DISCORD INVITE . 6RYJM4M    " ; 179
-    dw "    discord invite . &ryjm$m    " ; 180
-    dw "         BETA SAMUS LINK        " ; 181
-    dw "         beta.samus.link        " ; 182
+    dw "         BETA SAMUS LINK        " ; 171
+    dw "         beta.samus.link        " ; 172
     !purple
-    dw "      GAMEPLAY STATISTICS       " ; 183
+.stats
+    dw "      GAMEPLAY STATISTICS       " ; 173
     !orange
-    dw "             DOORS              " ; 184
+    dw "             DOORS              " ; 174
     !big
-    dw " DOOR TRANSITIONS               " ; 185
-    dw " door transitions               " ; 186 
-    dw " TIME IN DOORS      00'00'00^00 " ; 187
-    dw " time in doors                  " ; 188 
-    dw " TIME ALIGNING DOORS   00'00^00 " ; 189
-    dw " time aligning doors            " ; 190 
+.stats_doors
+    dw " DOOR TRANSITIONS               " ; 175
+    dw " door transitions               " ; 176 
+    dw " TIME IN DOORS      00'00'00^00 " ; 177
+    dw " time in doors                  " ; 178 
+    dw " TIME ALIGNING DOORS   00'00^00 " ; 179
+    dw " time aligning doors            " ; 180 
     !blue
-    dw "         TIME SPENT IN          " ; 191
+    dw "         TIME SPENT IN          " ; 181
     !big
-    dw " CRATERIA           00'00'00^00 " ; 192
-    dw " crateria                       " ; 193
-    dw " BRINSTAR           00'00'00^00 " ; 194
-    dw " brinstar                       " ; 195
-    dw " NORFAIR            00'00'00^00 " ; 196
-    dw " norfair                        " ; 197
-    dw " WRECKED SHIP       00'00'00^00 " ; 198
-    dw " wrecked ship                   " ; 199
-    dw " MARIDIA            00'00'00^00 " ; 200
-    dw " maridia                        " ; 201
-    dw " TOURIAN            00'00'00^00 " ; 202
-    dw " tourian                        " ; 203
+.stats_spent
+    dw " CRATERIA           00'00'00^00 " ; 182
+    dw " crateria                       " ; 183
+    dw " BRINSTAR           00'00'00^00 " ; 184
+    dw " brinstar                       " ; 185
+    dw " NORFAIR            00'00'00^00 " ; 186
+    dw " norfair                        " ; 187
+    dw " WRECKED SHIP       00'00'00^00 " ; 188
+    dw " wrecked ship                   " ; 189
+    dw " MARIDIA            00'00'00^00 " ; 190
+    dw " maridia                        " ; 191
+    dw " TOURIAN            00'00'00^00 " ; 192
+    dw " tourian                        " ; 193
     !green
-    dw "      SHOTS AND AMMO FIRED      " ; 204
+    dw "      SHOTS AND AMMO FIRED      " ; 194
     !big
-    dw " CHARGED SHOTS                  " ; 205
-    dw " charged shots                  " ; 206
-    dw " SPECIAL BEAM ATTACKS           " ; 207
-    dw " special beam attacks           " ; 208
-    dw " MISSILES                       " ; 209
-    dw " missiles                       " ; 210
-    dw " SUPER MISSILES                 " ; 211
-    dw " super missiles                 " ; 212
-    dw " POWER BOMBS                    " ; 213
-    dw " power bombs                    " ; 214
-    dw " BOMBS                          " ; 215
-    dw " bombs                          " ; 216
-    dw " FINAL TIME         00'00'00^00 " ; 217
-    dw " final time                     " ; 218
-    dw "       THANKS FOR PLAYING       " ; 219
-    dw "       thanks for playing       " ; 220
-    !cyan
-    dw "     PLAY THIS RANDOMIZER AT    " ; 221
+.stats_ammo
+    dw " CHARGED SHOTS                  " ; 195
+    dw " charged shots                  " ; 196
+    dw " SPECIAL BEAM ATTACKS           " ; 197
+    dw " special beam attacks           " ; 198
+    dw " MISSILES                       " ; 199
+    dw " missiles                       " ; 200
+    dw " SUPER MISSILES                 " ; 201
+    dw " super missiles                 " ; 202
+    dw " POWER BOMBS                    " ; 203
+    dw " power bombs                    " ; 204
+    dw " BOMBS                          " ; 205
+    dw " bombs                          " ; 206
+.stats_final
+    dw " FINAL TIME         00'00'00^00 " ; 207
+    dw " final time                     " ; 208
+    dw "       THANKS FOR PLAYING       " ; 209
+    dw "       thanks for playing       " ; 210
+    !purple
+.custom_sprite_graphics
+    dw "     CUSTOM SPRITE GRAPHICS     " ; 211
+    !big
+    dw "   TEST CUSTOM SPRITE ARTIST    " ; 212
+    dw "   test custom sprite artist    " ; 213
     dw $0000                              ; End of credits tilemap
 
 warnpc $ceff00
