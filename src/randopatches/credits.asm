@@ -1356,8 +1356,8 @@ credits:
 .custom_sprite_graphics
     dw "     CUSTOM SPRITE GRAPHICS     " ; 211
     !big
-    dw "   TEST CUSTOM SPRITE ARTIST    " ; 212
-    dw "   test custom sprite artist    " ; 213
+    dw "                                " ; 212 // Custom sprite artist
+    dw "                                " ; 213
     dw $0000                              ; End of credits tilemap
 
 warnpc $ceff00
