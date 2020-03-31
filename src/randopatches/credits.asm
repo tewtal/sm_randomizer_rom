@@ -1368,3 +1368,5 @@ itemlocations:
     !pink
     dw "      MAJOR ITEM LOCATIONS      " ; 640
     dw $0000
+
+cleartable
