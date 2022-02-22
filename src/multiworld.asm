@@ -20,6 +20,7 @@
 !Dash = #$83CC
 !EmptyBig = #message_EmptyBig
 !PlaceholderBig = #message_PlaceholderBig
+!KeycardBig = #KeycardBig
 
 mw_init:
     pha : phx : phy : php
@@ -152,6 +153,7 @@ namespace message
 org $859643
     dw !PlaceholderBig, !Big, item_sent
     dw !PlaceholderBig, !Big, item_received
+    dw !KeycardBig,     !Big, keycard
     dw !EmptySmall, !Small, btn_array
 
 table box.tbl,rtl
@@ -168,11 +170,20 @@ item_received:
     dw "___           FROM           ___"
     dw "___          PLAYER          ___"
 
+keycard:
+    dw "___       THIS IS THE        ___"
+    dw "___         KEYCARD          ___"
+    dw "___           FOR            ___"
+    dw "___          REGION          ___"
+
 cleartable
 
 btn_array:
 	DW $0000, $012A, $012A, $012C, $012C, $012C, $0000, $0000, $0000, $0000, $0000, $0000, $0120, $0000, $0000
 	DW $0000, $0000, $0000, $012A, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000
+    DW $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000
+    DW $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000
+    DW $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000
     DW $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000
     DW $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000
     DW $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000
@@ -204,6 +215,42 @@ item_names:
     dw "___       SCREW ATTACK       ___"
     dw "___       MORPHING BALL      ___"
     dw "___      A RESERVE TANK      ___"
+
+region_names:
+    dw "___         CRATERIA         ___" ; 0
+    dw "___         CRATERIA         ___" ; 1
+    dw "___         CRATERIA         ___" ; 2
+    dw "___         BRINSTAR         ___" ; 3
+    dw "___         BRINSTAR         ___" ; 4
+    dw "___         BRINSTAR         ___" ; 5
+    dw "___         NORFAIR          ___" ; 6
+    dw "___         NORFAIR          ___" ; 7
+    dw "___         NORFAIR          ___" ; 8
+    dw "___         MARIDIA          ___" ; 9
+    dw "___         MARIDIA          ___" ; A
+    dw "___         MARIDIA          ___" ; B
+    dw "___       WRECKED SHIP       ___" ; C
+    dw "___       WRECKED SHIP       ___" ; D
+    dw "___      LOWER NORFAIR       ___" ; E
+    dw "___      LOWER NORFAIR       ___" ; F
+
+keycard_names:
+    dw "___     LEVEL 1 KEYCARD      ___" ; 0
+    dw "___     LEVEL 2 KEYCARD      ___" ; 1
+    dw "___       BOSS KEYCARD       ___" ; 2
+    dw "___     LEVEL 1 KEYCARD      ___" ; 3
+    dw "___     LEVEL 2 KEYCARD      ___" ; 4
+    dw "___       BOSS KEYCARD       ___" ; 5
+    dw "___     LEVEL 1 KEYCARD      ___" ; 6
+    dw "___     LEVEL 2 KEYCARD      ___" ; 7
+    dw "___       BOSS KEYCARD       ___" ; 8
+    dw "___     LEVEL 1 KEYCARD      ___" ; 9
+    dw "___     LEVEL 2 KEYCARD      ___" ; A
+    dw "___       BOSS KEYCARD       ___" ; B
+    dw "___     LEVEL 1 KEYCARD      ___" ; C
+    dw "___       BOSS KEYCARD       ___" ; D
+    dw "___     LEVEL 1 KEYCARD      ___" ; E
+    dw "___       BOSS KEYCARD       ___" ; F    
 cleartable
 
 
@@ -250,6 +297,40 @@ write_placeholders:
     lda #$0020
     rts
 
+write_keycard:
+    phx : phy
+    lda $1c1f
+    cmp #$001f
+    beq .adjust
+    bra .end
+
+.adjust
+    lda $c7                ; Load keycard index
+    asl #6 : tay
+    phy
+
+    ldx #$0000
+-
+    lda keycard_names, y
+    sta.l $7e3280, x
+    inx #2 : iny #2
+    cpx #$0040
+    bne -
+
+    ply
+    ldx #$0000
+-
+    lda region_names, y
+    sta.l $7e3300, x
+    inx #2 : iny #2
+    cpx #$0040
+    bne -
+
+.end
+    ply : plx
+    lda #$0020
+    rts
+
 char_table:
     ;  <sp>     !      "      #      $      %      %      '      (      )      *      +      ,      -      .      /
     dw $384E, $38FF, $38FD, $38FE, $38FE, $380A, $38FE, $38FD, $38FE, $38FE, $38FE, $38FE, $38FB, $38FC, $38FA, $38FE
@@ -280,6 +361,11 @@ EmptyBig:
 PlaceholderBig:
     REP #$30
     JSR write_placeholders
+    LDY #$0000
+    JMP $841D
+KeycardBig:
+    REP #$30
+    JSR write_keycard
     LDY #$0000
     JMP $841D
 

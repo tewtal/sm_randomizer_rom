@@ -6,6 +6,10 @@ config_multiworld: ; $CEFF00
 ; Custom sprite used
 config_sprite: ; $CEFF02
     dw $0000
+    dw $0000
+
+config_keysanity: ; $CEFF06
+    dw $0000
 
 
 ; Custom sprite engine flags

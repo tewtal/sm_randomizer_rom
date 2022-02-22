@@ -1300,8 +1300,8 @@ credits:
 .play
     dw "     PLAY THIS RANDOMIZER AT    " ; 170
     !big
-    dw "         BETA SAMUS LINK        " ; 171
-    dw "         beta.samus.link        " ; 172
+    dw "          SM SAMUS LINK         " ; 171
+    dw "          sm.samus.link         " ; 172
     !purple
 .stats
     dw "      GAMEPLAY STATISTICS       " ; 173
