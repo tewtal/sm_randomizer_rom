@@ -36,7 +36,7 @@ org $808000				; Disable copy protection screen
 incsrc config.asm
 
 ; Super Metroid custom Samus sprite "engine" by Artheau
-incsrc "sprite/sprite.asm"
+incsrc sprite/sprite.asm
 
 ; These patches include their own origins and patch locations
 incsrc randopatches/introskip.asm
@@ -49,6 +49,11 @@ incsrc randopatches/tracking.asm
 incsrc randopatches/seed_display.asm
 incsrc randopatches/max_ammo.asm
 
+incsrc map_icons.asm
+incsrc plminject.asm
+incsrc keycards.asm
+incsrc items.asm
+
 ; Start anywhere patch, not used right now until graph based generation is in.
 ; incsrc startanywhere.asm
 
@@ -56,8 +61,7 @@ incsrc randopatches/max_ammo.asm
 org $b88000
 incsrc common.asm
 incsrc randolive.asm
-incsrc multiworld.asm
-incsrc items.asm
+incsrc multiworld.asm	; Place at end of this block, has own origins
 
 org $b8cf00
 incsrc seeddata.asm

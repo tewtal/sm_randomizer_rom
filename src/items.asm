@@ -26,6 +26,14 @@
 ; SM Item Patches
 pushpc
 
+org $898000
+    incbin "data/newitems.bin"
+
+org $8f8432
+    dw $efe0
+org $8f8432+$5
+    db $22
+
 ;org $8095f7
 ;    jsl nmi_read_messages : nop
 
@@ -41,6 +49,7 @@ c_item:
     dw !IChozoItem
 h_item:
     dw !IHiddenItem
+
 
 ; Graphics pointers for items (by item index)
 sm_item_graphics:
@@ -67,6 +76,45 @@ sm_item_graphics:
     dw $8700 : db $00, $00, $00, $00, $00, $00, $00, $00    ; Morph ball
     dw $9000 : db $00, $00, $00, $00, $00, $00, $00, $00    ; Reserve tank
 
+    dw $0000 : db $00, $00, $00, $00, $00, $00, $00, $00    ; 15 - Unused
+    dw $0000 : db $00, $00, $00, $00, $00, $00, $00, $00    ; 16 - Unused
+    dw $0000 : db $00, $00, $00, $00, $00, $00, $00, $00    ; 17 - Unused
+    dw $0000 : db $00, $00, $00, $00, $00, $00, $00, $00    ; 18 - Unused
+    dw $0000 : db $00, $00, $00, $00, $00, $00, $00, $00    ; 19 - Unused
+    dw $0000 : db $00, $00, $00, $00, $00, $00, $00, $00    ; 1A - Unused
+    dw $0000 : db $00, $00, $00, $00, $00, $00, $00, $00    ; 1B - Unused
+    dw $0000 : db $00, $00, $00, $00, $00, $00, $00, $00    ; 1C - Unused
+    dw $0000 : db $00, $00, $00, $00, $00, $00, $00, $00    ; 1D - Unused
+    dw $0000 : db $00, $00, $00, $00, $00, $00, $00, $00    ; 1E - Unused
+    dw $0000 : db $00, $00, $00, $00, $00, $00, $00, $00    ; 1F - Unused
+
+    dw $EE00 : db $03, $03, $03, $03, $03, $03, $03, $03    ; 20 - Crateria L1 Key
+    dw $EF00 : db $02, $02, $02, $02, $02, $02, $02, $02    ; 21 - Crateria L2 Key
+    dw $F000 : db $00, $00, $00, $00, $00, $00, $00, $00    ; 22 - Crateria Boss Key
+
+    dw $EE00 : db $03, $03, $03, $03, $03, $03, $03, $03    ; 23 - Brinstar L1 Key
+    dw $EF00 : db $02, $02, $02, $02, $02, $02, $02, $02    ; 24 - Brinstar L2 Key
+    dw $F000 : db $00, $00, $00, $00, $00, $00, $00, $00    ; 25 - Brinstar Boss Key
+
+    dw $EE00 : db $03, $03, $03, $03, $03, $03, $03, $03    ; 26 - Norfair L1 Key
+    dw $EF00 : db $02, $02, $02, $02, $02, $02, $02, $02    ; 27 - Norfair L2 Key
+    dw $F000 : db $00, $00, $00, $00, $00, $00, $00, $00    ; 28 - Norfair Boss Key
+
+    dw $EE00 : db $03, $03, $03, $03, $03, $03, $03, $03    ; 29 - Maridia L1 Key
+    dw $EF00 : db $02, $02, $02, $02, $02, $02, $02, $02    ; 2A - Maridia L2 Key
+    dw $F000 : db $00, $00, $00, $00, $00, $00, $00, $00    ; 2B - Maridia Boss Key
+
+    dw $EE00 : db $03, $03, $03, $03, $03, $03, $03, $03    ; 2C - Wrecked Ship L1 Key
+    dw $F000 : db $00, $00, $00, $00, $00, $00, $00, $00    ; 2D - Wrecked Ship Boss Key
+
+    dw $EE00 : db $03, $03, $03, $03, $03, $03, $03, $03    ; 2E - Lower Norfair L1 Key
+    dw $F000 : db $00, $00, $00, $00, $00, $00, $00, $00    ; 2F - Lower Norfair Boss Key
+
+    dw $F500 : db $00, $00, $00, $00, $00, $00, $00, $00    ; 30 - L1 Key Plaque
+    dw $F600 : db $00, $00, $00, $00, $00, $00, $00, $00    ; 31 - L2 Key Plaque
+    dw $F700 : db $00, $00, $00, $00, $00, $00, $00, $00    ; 32 - Boss Key Plaque
+
+
 sm_item_table:
     ; pickup, qty,   msg,   type,  ext2,  ext3,  loop,  hloop
     dw $8968, $0064, $0000, $0000, $0000, $0000, $E0A5, #p_etank_hloop      ; E-Tank
@@ -91,6 +139,35 @@ sm_item_table:
     dw $88F3, $0008, $000A, $0004, $0000, $0000, $0000, $0000      ; Screw attack
     dw $88F3, $0004, $0009, $0004, $0000, $0000, $0000, $0000      ; Morph ball
     dw $8986, $0064, $0000, $0006, $0000, $0000, $0000, $0000      ; Reserve tank
+
+    dw $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000      ; 15 - Unused
+    dw $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000      ; 16 - Unused
+    dw $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000      ; 17 - Unused
+    dw $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000      ; 18 - Unused
+    dw $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000      ; 19 - Unused
+    dw $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000      ; 1A - Unused
+    dw $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000      ; 1B - Unused
+    dw $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000      ; 1C - Unused
+    dw $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000      ; 1D - Unused
+    dw $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000      ; 1E - Unused
+    dw $0000, $0000, $0000, $0000, $0000, $0000, $0000, $0000      ; 1F - Unused
+
+    dw kcard, $0000, $0000, $0010, $0000, $0000, $0000, $0000      ; 20 - Crateria L1 Key
+    dw kcard, $0000, $0000, $0010, $0001, $0000, $0000, $0000      ; 21 - Crateria L2 Key
+    dw kcard, $0000, $0000, $0010, $0002, $0000, $0000, $0000      ; 22 - Crateria Boss Key
+    dw kcard, $0000, $0000, $0010, $0003, $0000, $0000, $0000      ; 23 - Brinstar L1 Key
+    dw kcard, $0000, $0000, $0010, $0004, $0000, $0000, $0000      ; 24 - Brinstar L2 Key
+    dw kcard, $0000, $0000, $0010, $0005, $0000, $0000, $0000      ; 25 - Brinstar Boss Key
+    dw kcard, $0000, $0000, $0010, $0006, $0000, $0000, $0000      ; 26 - Norfair L1 Key
+    dw kcard, $0000, $0000, $0010, $0007, $0000, $0000, $0000      ; 27 - Norfair L2 Key
+    dw kcard, $0000, $0000, $0010, $0008, $0000, $0000, $0000      ; 28 - Norfair Boss Key
+    dw kcard, $0000, $0000, $0010, $0009, $0000, $0000, $0000      ; 29 - Maridia L1 Key
+    dw kcard, $0000, $0000, $0010, $000A, $0000, $0000, $0000      ; 2A - Maridia L2 Key
+    dw kcard, $0000, $0000, $0010, $000B, $0000, $0000, $0000      ; 2B - Maridia Boss Key
+    dw kcard, $0000, $0000, $0010, $000C, $0000, $0000, $0000      ; 2C - Wrecked Ship L1 Key
+    dw kcard, $0000, $0000, $0010, $000D, $0000, $0000, $0000      ; 2D - Wrecked Ship Boss Key
+    dw kcard, $0000, $0000, $0010, $000E, $0000, $0000, $0000      ; 2E - Lower Norfair L1 Key
+    dw kcard, $0000, $0000, $0010, $000F, $0000, $0000, $0000      ; 2F - Lower Norfair Boss Key
 
 i_visible_item:
     lda #$0006
@@ -198,9 +275,18 @@ p_hidden_item:
 
 i_start_draw_loop:
     phy : phx
+    lda config_multiworld
+    bne .multiworld
+    lda $1dc7, x
+    pha : and #$ff00 : asl #3 : tax
+    pla : xba : and #$00ff          ; Grab the actual item ID from the PLM argument
+    bra .load_gfx
+
+.multiworld          
     lda $1dc7, x              ; Load PLM room argument
-    asl #3 : tax
+    asl #3 : tax    
     lda.l rando_item_table+$2, x ; Load item id
+.load_gfx    
     asl #4
     clc : adc #$000C
     tax
@@ -217,9 +303,18 @@ i_start_draw_loop:
 
 i_start_hidden_draw_loop:
     phy : phx
+    lda config_multiworld
+    bne .multiworld
+    lda $1dc7, x
+    pha : and #$ff00 : asl #3 : tax
+    pla : xba : and #$00ff          ; Grab the actual item ID from the PLM argument
+    bra .load_gfx
+
+.multiworld          
     lda $1dc7, x              ; Load PLM room argument
     asl #3 : tax
     lda.l rando_item_table+$2, x ; Load item id
+.load_gfx
     asl #4
     clc : adc #$000E
     tax
@@ -236,11 +331,20 @@ i_start_hidden_draw_loop:
 
 i_load_custom_graphics:
     phy : phx : phx
+    lda config_multiworld
+    bne .multiworld
+    
+    lda $1dc7, x
+    pha : and #$ff00 : asl #3 : tax
+    pla : xba : and #$00ff          ; Grab the actual item ID from the PLM argument
+    bra .load_gfx
+
+.multiworld    
     lda $1dc7, x              ; Load PLM room argument
     asl #3 : tax
     lda.l rando_item_table+$2, x ; Load item id
+.load_gfx
     plx
-
     %a8()
     sta $4202
     lda #$0A
@@ -268,10 +372,20 @@ i_load_custom_graphics:
 
 i_visible_item_setup:
     phy : phx
+    lda config_multiworld
+    bne .multiworld
+
+    lda $1dc7, y
+    pha : and #$ff00 : asl #3 : tax
+    pla : xba : and #$00ff          ; Grab the actual item ID from the PLM argument
+    bra .load_gfx
+
+.multiworld
     lda $1dc7, y                    ; Load PLM room argument (contains location index of item)
     asl #3                          ; Multiply by 8 for table width
     tax
     lda.l rando_item_table+$2, x       ; Load item id from item table
+.load_gfx    
     %a8()
     sta $4202
     lda #$0A
@@ -294,10 +408,20 @@ i_visible_item_setup:
 
 i_hidden_item_setup:
     phy : phx
+    lda config_multiworld
+    bne .multiworld
+    
+    lda $1dc7, y
+    pha : and #$ff00 : asl #3 : tax
+    pla : xba : and #$00ff          ; Grab the actual item ID from the PLM argument
+    bra .load_gfx
+
+.multiworld
     lda $1dc7, y                    ; Load PLM room argument (contains location index of item)
     asl #3                          ; Multiply by 8 for table width
     tax
     lda.l rando_item_table+$2, x       ; Load item id from item table
+.load_gfx
     %a8()
     sta $4202
     lda #$0A
@@ -334,10 +458,21 @@ i_load_rando_item:
 ; Pick up SM item
 i_live_pickup:
     phx : phy : php
-    lda $1dc7, x              ; Load PLM room argument
+    lda config_multiworld
+    bne .multiworld
+
+    ; Get single-world custom items using the multiworld PLM
+    lda $1dc7, x
+    pha : and #$ff00 : asl #3 : tax
+    pla : xba : and #$00ff          ; Grab the actual item ID from the PLM argument
+    jsr receive_sm_item
+    jmp .end
+
+.multiworld    
+    lda $1dc7, x                    ; Load PLM room argument
     asl #3 : tax
 
-    lda.l rando_item_table, x ; Load item type
+    lda.l rando_item_table, x       ; Load item type
     beq .own_item
 
 .multiworld_item                    ; This is someone elses item, send message
@@ -350,7 +485,7 @@ i_live_pickup:
     phx : phy
     jsl mw_write_message            ; Send message
     ply : plx
-    jsl mw_display_item_sent     ; Display custom message box
+    jsl mw_display_item_sent        ; Display custom message box
     bra .end
 
 .own_item
@@ -362,9 +497,21 @@ i_live_pickup:
     plp : ply : plx
     rts
 
+; Pickup routine for keycard
+kcard:
+    lda $c7
+    and #$000f
+    sta $c7                     ; Store keycard index
+    clc : adc #$0080            ; Turn this into an event id
+    jsl $8081fa   
+
+    lda #$001f
+    jsl $858080                 ; Display message 1f - keycard
+    rts
 
 ; Item index to receive in A
 receive_sm_item:
+    sta $c7
     asl : asl : asl : asl
     phx
     clc
